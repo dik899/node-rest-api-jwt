@@ -3,8 +3,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  create: function(req, res, next) {
+  create: async function(req, res, next) {
   
+   if ( await userModel.findOne({ email:req.body.email})) {
+         res.status(409).send("Email is  Already Taken.");
+        throw 'Email "' + req.body.email + '" is already taken' ;
+        
+      }
   userModel.create({ name: req.body.name, email: req.body.email, password: req.body.password }, function (err, result) {
       if (err) 
        next(err);
